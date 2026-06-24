@@ -2,7 +2,7 @@ const tele = window.Telegram.WebApp;
 tele.expand();
 
 const STATE = {
-    user_id: 7918103039, // Default for testing, will get from tele.initDataUnsafe
+    user_id: 8386441380, // Default for testing, will get from tele.initDataUnsafe
     bots: [],
     currentBot: null
 };
