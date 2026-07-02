@@ -1,56 +1,74 @@
 # clonemini
 
-## 🚀 Deployment Guide - VPS Par Host Karne Ke Liye
+## Quick Start
 
 ### Prerequisites
 - Python 3.8+
-- pip (Python package manager)
-- Git
+- MongoDB
+- ImgBB API Key
+- Telegram Bot Token
 
-### VPS Setup Steps
+### Setup Commands
 
-#### 1. **SSH se VPS connect kro**
 ```bash
-ssh root@your_vps_ip
-```
-
-#### 2. **System dependencies install kro**
-```bash
-apt update && apt upgrade -y
-apt install python3-pip python3-venv git -y
-```
-
-#### 3. **Repository clone kro**
-```bash
-cd /home
+# Clone repository
 git clone https://github.com/Oyeayushh/Clone-Web.git
 cd Clone-Web
-```
 
-#### 4. **Virtual Environment banao**
-```bash
+# Create virtual environment
 python3 -m venv venv
 source venv/bin/activate
-```
 
-#### 5. **Dependencies install kro**
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-#### 6. **Application run kro (Testing)**
-```bash
+# Create .env file (copy from .env.example)
+cp .env.example .env
+# Edit .env with your credentials
+
+# Run application
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
-### Production Setup (Gunicorn + Nginx ke saath)
+Visit `http://localhost:8000` in your browser.
 
-#### 1. **Gunicorn install kro**
+---
+
+## VPS Deployment
+
+### Production Setup
+
 ```bash
+# SSH to VPS
+ssh root@your_vps_ip
+
+# Setup project
+cd /home
+git clone https://github.com/Oyeayushh/Clone-Web.git
+cd Clone-Web
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+
+# Edit .env with your production credentials
+nano .env
+
+# Install Gunicorn
 pip install gunicorn
+
+# Run with Gunicorn
+gunicorn -w 4 -b 0.0.0.0:8000 main:app
 ```
 
-#### 2. **Systemd Service file banao** (`/etc/systemd/system/clone-web.service`)
+### Setup Systemd Service (Auto-restart)
+
+```bash
+# Create service file
+sudo nano /etc/systemd/system/clone-web.service
+```
+
+Paste this:
 ```ini
 [Unit]
 Description=Clone Web Application
@@ -66,20 +84,21 @@ ExecStart=/home/Clone-Web/venv/bin/gunicorn -w 4 -b 0.0.0.0:8000 main:app
 WantedBy=multi-user.target
 ```
 
-#### 3. **Service enable aur start kro**
+Then:
 ```bash
-systemctl daemon-reload
-systemctl enable clone-web
-systemctl start clone-web
-systemctl status clone-web
+sudo systemctl daemon-reload
+sudo systemctl enable clone-web
+sudo systemctl start clone-web
 ```
 
-#### 4. **Nginx install aur configure kro**
+### Setup Nginx Reverse Proxy
+
 ```bash
-apt install nginx -y
+sudo apt install nginx -y
+sudo nano /etc/nginx/sites-available/clone-web
 ```
 
-**Nginx Config** (`/etc/nginx/sites-available/clone-web`):
+Paste this:
 ```nginx
 server {
     listen 80;
@@ -90,44 +109,38 @@ server {
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
 ```
 
-#### 5. **Nginx enable kro**
+Then:
 ```bash
-ln -s /etc/nginx/sites-available/clone-web /etc/nginx/sites-enabled/
-nginx -t
-systemctl restart nginx
+sudo ln -s /etc/nginx/sites-available/clone-web /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
 ```
 
-#### 6. **SSL Certificate lao (Let's Encrypt)**
+### SSL Certificate (Let's Encrypt)
+
 ```bash
-apt install certbot python3-certbot-nginx -y
-certbot --nginx -d your_domain.com
+sudo apt install certbot python3-certbot-nginx -y
+sudo certbot --nginx -d your_domain.com
 ```
-
-### Useful Commands
-
-- **Logs dekhne ke liye:**
-  ```bash
-  journalctl -u clone-web -f
-  ```
-
-- **Service restart kro:**
-  ```bash
-  systemctl restart clone-web
-  ```
-
-- **Application stop kro:**
-  ```bash
-  systemctl stop clone-web
-  ```
-
-### Environment Variables
-.env file create kro root directory mein agar zaroorat ho.
 
 ---
 
-**Happy Hosting! 🎉**
+## Useful Commands
+
+```bash
+# View logs
+journalctl -u clone-web -f
+
+# Restart service
+sudo systemctl restart clone-web
+
+# Stop service
+sudo systemctl stop clone-web
+
+# Check status
+sudo systemctl status clone-web
+```
