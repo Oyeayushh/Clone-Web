@@ -10,20 +10,24 @@ from fastapi.staticfiles import StaticFiles
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel
 from typing import List, Optional
+from dotenv import load_dotenv
+
+# Load .env file
+load_dotenv()
 
 # --- CONFIGURATION ---
-MONGO_DB_URI = os.getenv("MONGO_DB_URI")
-IMGBB_API_KEY = os.getenv("IMGBB_API_KEY")
+MONGO_DB_URI = os.getenv("MONGO_DB_URI", "mongodb+srv://string-hack:A@cluster0.xplsxop.mongodb.net/?appName=Cluster0")
+IMGBB_API_KEY = os.getenv("IMGBB_API_KEY", "b5b3a09cb68c14296a3cc53b110096c4")
 UPLOAD_API = os.getenv("UPLOAD_API", "https://api.imgbb.com/1/upload")
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8800005075:AAHoXYeX19J7z4ViE62Ff4jcW9Ki0tASeEw")
 
-# Validation
+# Validation - Only warn, don't raise
 if not MONGO_DB_URI:
-    raise ValueError("MONGO_DB_URI environment variable not set")
+    print("WARNING: MONGO_DB_URI not set, using default")
 if not IMGBB_API_KEY:
-    raise ValueError("IMGBB_API_KEY environment variable not set")
+    print("WARNING: IMGBB_API_KEY not set, using default")
 if not BOT_TOKEN:
-    raise ValueError("BOT_TOKEN environment variable not set")
+    print("WARNING: BOT_TOKEN not set, using default")
 
 app = FastAPI()
 
