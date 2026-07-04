@@ -159,9 +159,12 @@ async def upload_image(image: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Mount static files only if directory exists
-if os.path.isdir("static"):
-    app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# Mount static files only if directory exists (use absolute path so this
+# also works when the app is imported from api/index.py on Vercel, where the
+# process cwd is not guaranteed to be the project root)
+STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+if os.path.isdir(STATIC_DIR):
+    app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
 else:
     @app.get("/")
     async def root():
