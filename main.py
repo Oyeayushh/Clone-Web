@@ -16,10 +16,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # --- CONFIGURATION ---
-MONGO_DB_URI = os.getenv("MONGO_DB_URI", "mongodb+srv://string-hack:A@cluster0.xplsxop.mongodb.net/?appName=Cluster0")
+MONGO_DB_URI = os.getenv("MONGO_DB_URI", "mongodb+srv://saranclone:A@cluster0.xpustfk.mongodb.net/?appName=Cluster0")
 IMGBB_API_KEY = os.getenv("IMGBB_API_KEY", "b5b3a09cb68c14296a3cc53b110096c4")
 UPLOAD_API = os.getenv("UPLOAD_API", "https://api.imgbb.com/1/upload")
-BOT_TOKEN = os.getenv("BOT_TOKEN", "8800005075:AAHoXYeX19J7z4ViE62Ff4jcW9Ki0tASeEw")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8887485449:AAE8xgLnpSa9G7P2bmD9P2qmIffZ-eVqNVM")
 
 # Validation - Only warn, don't raise
 if not MONGO_DB_URI:
